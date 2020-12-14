@@ -16,8 +16,7 @@ version 1.0
 ## - One GVCF file and its index
 ##
 ## Cromwell version support 
-## - Successfully tested on v37
-## - Does not work on versions < v23 due to output syntax
+## - Successfully tested on v53
 ##
 ## Runtime parameters are optimized for Broad's Google Cloud Platform implementation.
 ##
@@ -40,9 +39,9 @@ workflow HaplotypeCallerGvcf_GATK4 {
   
     Boolean make_gvcf = true
     Boolean make_bamout = false
-    String gatk_docker = "broadinstitute/gatk:4.1.8.1"
+    String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.1.9.0"
     String gatk_path = "/gatk/gatk"
-    String gitc_docker = "broadinstitute/genomes-in-the-cloud:2.3.1-1500064817"
+    String gitc_docker = "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.7-1603303710"
     String samtools_path = "samtools"
   }  
 
@@ -216,7 +215,7 @@ task HaplotypeCaller {
       -I ~{input_bam} \
       -L ~{interval_list} \
       -O ~{output_filename} \
-      -contamination ~{default=0 contamination} \
+      -contamination ~{default="0" contamination} \
       -G StandardAnnotation -G StandardHCAnnotation ~{true="-G AS_StandardAnnotation" false="" make_gvcf} \
       -GQB 10 -GQB 20 -GQB 30 -GQB 40 -GQB 50 -GQB 60 -GQB 70 -GQB 80 -GQB 90 \
       ~{true="-ERC GVCF" false="" make_gvcf} \
